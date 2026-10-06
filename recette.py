@@ -21,7 +21,21 @@ def afficher(ingredients):
         print(nom, ":", round(quantite, 1), unite)
 
 
+def adapter(ingredients, personnes_recette, personnes):
+    """Les ingrédients pour `personnes` personnes, d'une recette écrite pour `personnes_recette` personnes."""
+    facteur = personnes / personnes_recette
+    resultat = []
+    for nom, quantite, unite in ingredients:
+        resultat.append((nom, quantite * facteur, unite))
+    return resultat
+
+
 # ---- Le programme -------------------------------------------------------------
 
-print("Crêpes pour", PERSONNES_RECETTE, "personnes")
-afficher(INGREDIENTS)
+# Les valeurs à changer
+PERSONNES = 6             # le nombre de personnes voulu
+
+ingredients = adapter(INGREDIENTS, PERSONNES_RECETTE, PERSONNES)
+
+print("Crêpes pour", PERSONNES, "personnes")
+afficher(ingredients)

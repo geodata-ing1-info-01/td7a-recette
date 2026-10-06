@@ -17,7 +17,7 @@ PERSONNES_RECETTE = 4     # les recettes sont écrites pour 4 personnes
 
 def afficher(ingredients):
     """Affiche une ligne par ingrédient : le nom, la quantité et l'unité."""
-    for nom, quantite, unite in ingredients
+    for nom, quantite, unite in ingredients:
 	print(nom, ":", round(quantite, 1), unite)
 
 

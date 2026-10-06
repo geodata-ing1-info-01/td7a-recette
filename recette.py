@@ -12,6 +12,11 @@ INGREDIENTS = [
 ]
 PERSONNES_RECETTE = 4     # les recettes sont écrites pour 4 personnes
 
+# Pour chaque unité : l'unité de l'autre système, et le nombre par lequel
+# multiplier la quantité
+VERS_US = {"g": ("oz", 1 / 28.3495), "ml": ("cup", 1 / 236.588)}
+VERS_SI = {"oz": ("g", 28.3495), "cup": ("ml", 236.588)}
+
 
 # ---- Les fonctions -----------------------------------------------------------
 
@@ -30,12 +35,30 @@ def adapter(ingredients, personnes_recette, personnes):
     return resultat
 
 
+def convertir(ingredients, table):
+    """Les ingrédients, chaque unité présente dans `table` remplacée par celle de l'autre système."""
+    resultat = []
+    for nom, quantite, unite in ingredients:
+        if unite in table:
+            nouvelle_unite, facteur = table[unite]
+            resultat.append((nom, quantite * facteur, nouvelle_unite))
+        else:
+            resultat.append((nom, quantite, unite))
+    return resultat
+
+
 # ---- Le programme -------------------------------------------------------------
 
 # Les valeurs à changer
 PERSONNES = 6             # le nombre de personnes voulu
+UNITES = "US"             # le système d'unités voulu : "SI" ou "US"
 
 ingredients = adapter(INGREDIENTS, PERSONNES_RECETTE, PERSONNES)
 
-print("Crêpes pour", PERSONNES, "personnes")
+if UNITES == "US":
+    ingredients = convertir(ingredients, VERS_US)
+else:
+    ingredients = convertir(ingredients, VERS_SI)
+
+print("Crêpes pour", PERSONNES, "personnes, en unités", UNITES)
 afficher(ingredients)

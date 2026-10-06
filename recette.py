@@ -15,6 +15,7 @@ VERS_SI = {"oz": ("g", 28.3495), "cup": ("ml", 236.588)}
 # Les chemins partent du dossier du script : __file__ est le chemin de ce fichier
 RACINE = Path(__file__).parent
 DONNEES = RACINE / "recettes"
+SORTIE = RACINE / "sortie"
 
 
 # ---- Les fonctions -----------------------------------------------------------
@@ -28,6 +29,15 @@ def lire_ingredients(chemin):
         for nom, quantite, unite in lecteur:
             ingredients.append((nom, float(quantite), unite))
     return ingredients
+
+
+def ecrire_ingredients(chemin, ingredients):
+    """Écrit les ingrédients dans un fichier CSV, avec les mêmes colonnes que les fichiers lus."""
+    with open(chemin, "w", encoding="utf-8", newline="") as fichier:
+        ecrivain = csv.writer(fichier)
+        ecrivain.writerow(["ingredient", "quantite", "unite"])
+        for nom, quantite, unite in ingredients:
+            ecrivain.writerow([nom, round(quantite, 1), unite])
 
 
 def afficher(ingredients):
@@ -74,3 +84,9 @@ else:
 
 print(NOM, "pour", PERSONNES, "personnes, en unités", UNITES)
 afficher(ingredients)
+
+# Le résultat, dans sortie/
+SORTIE.mkdir(exist_ok=True)
+fichier = SORTIE / (NOM + "_" + str(PERSONNES) + "_" + UNITES + ".csv")
+ecrire_ingredients(fichier, ingredients)
+print("écrit :", fichier)

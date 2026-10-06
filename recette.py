@@ -1,5 +1,6 @@
 """Une recette à l'échelle : les ingrédients pour un nombre de personnes, en unités SI ou US."""
 
+import argparse
 import csv
 from pathlib import Path
 
@@ -69,10 +70,15 @@ def convertir(ingredients, table):
 
 # ---- Le programme -------------------------------------------------------------
 
-# Les valeurs à changer
-NOM = "crepes"            # la recette : un fichier de recettes/, sans .csv
-PERSONNES = 6             # le nombre de personnes voulu
-UNITES = "US"             # le système d'unités voulu : "SI" ou "US"
+# Les valeurs viennent de la ligne de commande
+analyseur = argparse.ArgumentParser(description="Les ingrédients d'une recette pour un nombre de personnes, en unités SI ou US.")
+analyseur.add_argument("nom", help="la recette : un fichier de recettes/, sans .csv")
+analyseur.add_argument("-p", "--personnes", type=int, default=4, help="nombre de personnes (défaut : 4)")
+analyseur.add_argument("-u", "--unites", choices=("SI", "US"), default="SI", help="système d'unités (défaut : SI)")
+options = analyseur.parse_args()
+NOM = options.nom
+PERSONNES = options.personnes
+UNITES = options.unites
 
 ingredients = lire_ingredients(DONNEES / (NOM + ".csv"))
 ingredients = adapter(ingredients, PERSONNES_RECETTE, PERSONNES)
